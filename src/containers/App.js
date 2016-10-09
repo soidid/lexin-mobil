@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import { inputQuery,
          fetchDictionaryIndexIfNeeded,
          fetchDictionaryContentIfNeeded} from '../actions'
-import Search from '../components/Search'
-import LexikonEntry from '../components/LexikonEntry'
-
+import Search from '../components/Search/Search'
+import LexikonEntry from '../components/LexikonEntry/LexikonEntry'
+import styles from "./App.css";
 
 class App extends Component {
   static propTypes = {
@@ -49,15 +49,15 @@ class App extends Component {
     }
    
     return (
-      <div>
+      <div className={styles.app}>
         
         <Search onSearch={this.handleSearch} />
         { input === '' ?
-          (<div>Skriv ett ord! ;)</div>): 
+          "": 
           (<div>
               <div>Search for: <b>{input} </b></div>
               <div>{index ? "": "No matching result."}</div>
-              <div>{index === input ? "": (index ? "Infinitiv: "+index : "")}</div>
+              <div>{index === input ? "": (index ? "Key: "+index : "")}</div>
           </div>)
         }
         { localResults }

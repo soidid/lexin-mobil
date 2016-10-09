@@ -25777,9 +25777,13 @@
 
 	var _Search2 = _interopRequireDefault(_Search);
 
-	var _LexikonEntry = __webpack_require__(211);
+	var _LexikonEntry = __webpack_require__(215);
 
 	var _LexikonEntry2 = _interopRequireDefault(_LexikonEntry);
+
+	var _App = __webpack_require__(218);
+
+	var _App2 = _interopRequireDefault(_App);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25852,13 +25856,9 @@
 
 	      return _react2.default.createElement(
 	        'div',
-	        null,
+	        { className: _App2.default.app },
 	        _react2.default.createElement(_Search2.default, { onSearch: this.handleSearch }),
-	        input === '' ? _react2.default.createElement(
-	          'div',
-	          null,
-	          'Skriv ett ord! ;)'
-	        ) : _react2.default.createElement(
+	        input === '' ? "" : _react2.default.createElement(
 	          'div',
 	          null,
 	          _react2.default.createElement(
@@ -25880,7 +25880,7 @@
 	          _react2.default.createElement(
 	            'div',
 	            null,
-	            index === input ? "" : index ? "Infinitiv: " + index : ""
+	            index === input ? "" : index ? "Key: " + index : ""
 	          )
 	        ),
 	        localResults
@@ -25933,6 +25933,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _Search = __webpack_require__(211);
+
+	var _Search2 = _interopRequireDefault(_Search);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Search = function Search(_ref) {
@@ -25940,7 +25944,7 @@
 	  var onSearch = _ref.onSearch;
 	  return _react2.default.createElement(
 	    'div',
-	    null,
+	    { className: _Search2.default.search },
 	    _react2.default.createElement(
 	      'form',
 	      { onSubmit: function onSubmit(e) {
@@ -25951,12 +25955,15 @@
 	          onSearch(input.value);
 	          input.value = '';
 	        } },
-	      _react2.default.createElement('input', { ref: function ref(node) {
+	      _react2.default.createElement('input', { className: _Search2.default.input,
+	        ref: function ref(node) {
 	          input = node;
-	        } }),
+	        },
+	        placeholder: 'Skriv ett ord ;)'
+	      }),
 	      _react2.default.createElement(
 	        'button',
-	        { type: 'submit' },
+	        { className: _Search2.default.submit, type: 'submit' },
 	        'Slå upp!'
 	      )
 	    )
@@ -25973,6 +25980,358 @@
 /* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(212);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(214)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js?modules=true&localIdentName=[name]__[local]___[hash:base64:5]!./Search.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js?modules=true&localIdentName=[name]__[local]___[hash:base64:5]!./Search.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 212 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(213)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".Search__search___HZgNE {\n\tmargin: 2px 0 20px 0;\n    text-align: center;\n}\n.Search__input___3nCkp {\n    height: 33px;\n    width: calc(100% - 100px);\n    margin: 0 2px 0 0;\n    padding: 0px 8px;\n}\n.Search__input___3nCkp:focus {\n\toutline: none;\n}\n.Search__submit___kIr8K {\n\theight: 36px;\n    background: #F8766B;\n    color: white;\n    border: 1px solid;\n    vertical-align: top;\n    font-family: cursive;\n}", ""]);
+
+	// exports
+	exports.locals = {
+		"search": "Search__search___HZgNE",
+		"input": "Search__input___3nCkp",
+		"submit": "Search__submit___kIr8K"
+	};
+
+/***/ },
+/* 213 */
+/***/ function(module, exports) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	// css base code, injected by the css-loader
+	module.exports = function() {
+		var list = [];
+
+		// return the list of modules as css string
+		list.toString = function toString() {
+			var result = [];
+			for(var i = 0; i < this.length; i++) {
+				var item = this[i];
+				if(item[2]) {
+					result.push("@media " + item[2] + "{" + item[1] + "}");
+				} else {
+					result.push(item[1]);
+				}
+			}
+			return result.join("");
+		};
+
+		// import a list of modules into the list
+		list.i = function(modules, mediaQuery) {
+			if(typeof modules === "string")
+				modules = [[null, modules, ""]];
+			var alreadyImportedModules = {};
+			for(var i = 0; i < this.length; i++) {
+				var id = this[i][0];
+				if(typeof id === "number")
+					alreadyImportedModules[id] = true;
+			}
+			for(i = 0; i < modules.length; i++) {
+				var item = modules[i];
+				// skip already imported module
+				// this implementation is not 100% perfect for weird media query combinations
+				//  when a module is imported multiple times with different media queries.
+				//  I hope this will never occur (Hey this way we have smaller bundles)
+				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+					if(mediaQuery && !item[2]) {
+						item[2] = mediaQuery;
+					} else if(mediaQuery) {
+						item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+					}
+					list.push(item);
+				}
+			}
+		};
+		return list;
+	};
+
+
+/***/ },
+/* 214 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	var stylesInDom = {},
+		memoize = function(fn) {
+			var memo;
+			return function () {
+				if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+				return memo;
+			};
+		},
+		isOldIE = memoize(function() {
+			return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
+		}),
+		getHeadElement = memoize(function () {
+			return document.head || document.getElementsByTagName("head")[0];
+		}),
+		singletonElement = null,
+		singletonCounter = 0,
+		styleElementsInsertedAtTop = [];
+
+	module.exports = function(list, options) {
+		if(false) {
+			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+		}
+
+		options = options || {};
+		// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+		// tags it will allow on a page
+		if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+
+		// By default, add <style> tags to the bottom of <head>.
+		if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
+
+		var styles = listToStyles(list);
+		addStylesToDom(styles, options);
+
+		return function update(newList) {
+			var mayRemove = [];
+			for(var i = 0; i < styles.length; i++) {
+				var item = styles[i];
+				var domStyle = stylesInDom[item.id];
+				domStyle.refs--;
+				mayRemove.push(domStyle);
+			}
+			if(newList) {
+				var newStyles = listToStyles(newList);
+				addStylesToDom(newStyles, options);
+			}
+			for(var i = 0; i < mayRemove.length; i++) {
+				var domStyle = mayRemove[i];
+				if(domStyle.refs === 0) {
+					for(var j = 0; j < domStyle.parts.length; j++)
+						domStyle.parts[j]();
+					delete stylesInDom[domStyle.id];
+				}
+			}
+		};
+	}
+
+	function addStylesToDom(styles, options) {
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			if(domStyle) {
+				domStyle.refs++;
+				for(var j = 0; j < domStyle.parts.length; j++) {
+					domStyle.parts[j](item.parts[j]);
+				}
+				for(; j < item.parts.length; j++) {
+					domStyle.parts.push(addStyle(item.parts[j], options));
+				}
+			} else {
+				var parts = [];
+				for(var j = 0; j < item.parts.length; j++) {
+					parts.push(addStyle(item.parts[j], options));
+				}
+				stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+			}
+		}
+	}
+
+	function listToStyles(list) {
+		var styles = [];
+		var newStyles = {};
+		for(var i = 0; i < list.length; i++) {
+			var item = list[i];
+			var id = item[0];
+			var css = item[1];
+			var media = item[2];
+			var sourceMap = item[3];
+			var part = {css: css, media: media, sourceMap: sourceMap};
+			if(!newStyles[id])
+				styles.push(newStyles[id] = {id: id, parts: [part]});
+			else
+				newStyles[id].parts.push(part);
+		}
+		return styles;
+	}
+
+	function insertStyleElement(options, styleElement) {
+		var head = getHeadElement();
+		var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+		if (options.insertAt === "top") {
+			if(!lastStyleElementInsertedAtTop) {
+				head.insertBefore(styleElement, head.firstChild);
+			} else if(lastStyleElementInsertedAtTop.nextSibling) {
+				head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+			} else {
+				head.appendChild(styleElement);
+			}
+			styleElementsInsertedAtTop.push(styleElement);
+		} else if (options.insertAt === "bottom") {
+			head.appendChild(styleElement);
+		} else {
+			throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+		}
+	}
+
+	function removeStyleElement(styleElement) {
+		styleElement.parentNode.removeChild(styleElement);
+		var idx = styleElementsInsertedAtTop.indexOf(styleElement);
+		if(idx >= 0) {
+			styleElementsInsertedAtTop.splice(idx, 1);
+		}
+	}
+
+	function createStyleElement(options) {
+		var styleElement = document.createElement("style");
+		styleElement.type = "text/css";
+		insertStyleElement(options, styleElement);
+		return styleElement;
+	}
+
+	function createLinkElement(options) {
+		var linkElement = document.createElement("link");
+		linkElement.rel = "stylesheet";
+		insertStyleElement(options, linkElement);
+		return linkElement;
+	}
+
+	function addStyle(obj, options) {
+		var styleElement, update, remove;
+
+		if (options.singleton) {
+			var styleIndex = singletonCounter++;
+			styleElement = singletonElement || (singletonElement = createStyleElement(options));
+			update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+			remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+		} else if(obj.sourceMap &&
+			typeof URL === "function" &&
+			typeof URL.createObjectURL === "function" &&
+			typeof URL.revokeObjectURL === "function" &&
+			typeof Blob === "function" &&
+			typeof btoa === "function") {
+			styleElement = createLinkElement(options);
+			update = updateLink.bind(null, styleElement);
+			remove = function() {
+				removeStyleElement(styleElement);
+				if(styleElement.href)
+					URL.revokeObjectURL(styleElement.href);
+			};
+		} else {
+			styleElement = createStyleElement(options);
+			update = applyToTag.bind(null, styleElement);
+			remove = function() {
+				removeStyleElement(styleElement);
+			};
+		}
+
+		update(obj);
+
+		return function updateStyle(newObj) {
+			if(newObj) {
+				if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+					return;
+				update(obj = newObj);
+			} else {
+				remove();
+			}
+		};
+	}
+
+	var replaceText = (function () {
+		var textStore = [];
+
+		return function (index, replacement) {
+			textStore[index] = replacement;
+			return textStore.filter(Boolean).join('\n');
+		};
+	})();
+
+	function applyToSingletonTag(styleElement, index, remove, obj) {
+		var css = remove ? "" : obj.css;
+
+		if (styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = replaceText(index, css);
+		} else {
+			var cssNode = document.createTextNode(css);
+			var childNodes = styleElement.childNodes;
+			if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+			if (childNodes.length) {
+				styleElement.insertBefore(cssNode, childNodes[index]);
+			} else {
+				styleElement.appendChild(cssNode);
+			}
+		}
+	}
+
+	function applyToTag(styleElement, obj) {
+		var css = obj.css;
+		var media = obj.media;
+
+		if(media) {
+			styleElement.setAttribute("media", media)
+		}
+
+		if(styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = css;
+		} else {
+			while(styleElement.firstChild) {
+				styleElement.removeChild(styleElement.firstChild);
+			}
+			styleElement.appendChild(document.createTextNode(css));
+		}
+	}
+
+	function updateLink(linkElement, obj) {
+		var css = obj.css;
+		var sourceMap = obj.sourceMap;
+
+		if(sourceMap) {
+			// http://stackoverflow.com/a/26603875
+			css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+		}
+
+		var blob = new Blob([css], { type: "text/css" });
+
+		var oldSrc = linkElement.href;
+
+		linkElement.href = URL.createObjectURL(blob);
+
+		if(oldSrc)
+			URL.revokeObjectURL(oldSrc);
+	}
+
+
+/***/ },
+/* 215 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -25983,10 +26342,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _LexikonEntry = __webpack_require__(216);
+
+	var _LexikonEntry2 = _interopRequireDefault(_LexikonEntry);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var parseVerb = function parseVerb(current) {
-
 	  if (!current || !current.paradigm || !current.paradigm.inflection) {
 	    return false;
 	  } else {
@@ -25999,12 +26361,34 @@
 	    }
 	  }
 	};
+	var parseSubstantiv = function parseSubstantiv(current) {
+	  if (!current || !current.paradigm || !current.paradigm.inflection) {
+	    return false;
+	  } else {
+	    return [current.paradigm.inflection[0].value, current.paradigm.inflection[1].value];
+	  }
+	};
+	var parseEttEn = function parseEttEn(current) {
+	  if (!current || !current.paradigm || !current.paradigm.inflection) {
+	    return false;
+	  } else {
+	    var bestamd = current.paradigm.inflection[0].value;
+	    var lastCharacter = bestamd.slice(-1);
+	    if (lastCharacter === 'n') {
+	      return 'en';
+	    } else {
+	      return 'ett';
+	    }
+	  }
+	};
 	var parseCategory = function parseCategory(name) {
 	  switch (name) {
 	    case 'jj':
 	      return 'adjektiv';
 	    case 'vb':
 	      return 'verb';
+	    case 'nn':
+	      return 'substantiv';
 	    default:
 	      return '(?)';
 	  }
@@ -26014,46 +26398,98 @@
 	  var entry = _ref.entry;
 
 	  var category = parseCategory(entry.class);
+	  var inflection = '';
+	  var inflectionBlock = '';
 
-	  var inflection = parseVerb(entry);
-	  var verb = inflection !== false ? _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(
-	      'div',
-	      null,
-	      'Imperativ: ',
-	      inflection[0],
-	      '!'
-	    ),
-	    _react2.default.createElement(
-	      'div',
-	      null,
-	      'Infinitiv: ',
-	      inflection[1]
-	    ),
-	    _react2.default.createElement(
-	      'div',
-	      null,
-	      'Presens: ',
-	      inflection[2]
-	    ),
-	    _react2.default.createElement(
-	      'div',
-	      null,
-	      'Preteritum ',
-	      inflection[3]
-	    ),
-	    _react2.default.createElement(
-	      'div',
-	      null,
-	      'Supinum: har ',
-	      inflection[4]
-	    )
-	  ) : "";
+	  switch (category) {
+	    case 'substantiv':
+	      inflection = parseSubstantiv(entry);
+	      var etten = parseEttEn(entry);
+	      inflectionBlock = _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          etten,
+	          ' ',
+	          entry.value
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          inflection[0]
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          '2 ',
+	          inflection[1]
+	        )
+	      );
+	      break;
 
-	  console.log(entry);
+	    case 'verb':
+	      inflection = parseVerb(entry);
+	      inflectionBlock = _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'span',
+	            { className: _LexikonEntry2.default.fix },
+	            'Imperativ:'
+	          ),
+	          inflection[0],
+	          '!'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'span',
+	            { className: _LexikonEntry2.default.fix },
+	            'Infinitiv:'
+	          ),
+	          inflection[1]
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'span',
+	            { className: _LexikonEntry2.default.fix },
+	            'Presens:'
+	          ),
+	          inflection[2]
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'span',
+	            { className: _LexikonEntry2.default.fix },
+	            'Preteritum'
+	          ),
+	          inflection[3]
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'span',
+	            { className: _LexikonEntry2.default.fix },
+	            'Supinum:'
+	          ),
+	          'har ',
+	          inflection[4]
+	        )
+	      );
+	      break;
 
+	  }
 	  return _react2.default.createElement(
 	    'div',
 	    null,
@@ -26066,12 +26502,96 @@
 	      ')',
 	      entry.translation.value
 	    ),
-	    verb,
+	    inflectionBlock,
 	    _react2.default.createElement('hr', null)
 	  );
 	};
 
 	exports.default = LexikonEntry;
+
+/***/ },
+/* 216 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(217);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(214)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js?modules=true&localIdentName=[name]__[local]___[hash:base64:5]!./LexikonEntry.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js?modules=true&localIdentName=[name]__[local]___[hash:base64:5]!./LexikonEntry.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 217 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(213)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".LexikonEntry__fix___2gNlf {\n\twidth: 90px;\n    display: inline-block;\n    color: #b5b1b1;\n}", ""]);
+
+	// exports
+	exports.locals = {
+		"fix": "LexikonEntry__fix___2gNlf"
+	};
+
+/***/ },
+/* 218 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(219);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(214)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js?modules=true&localIdentName=[name]__[local]___[hash:base64:5]!./App.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js?modules=true&localIdentName=[name]__[local]___[hash:base64:5]!./App.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(213)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".App__app___3n8Cz {\n\tfont-family: Arial,Helvetica,sans-serif;\n\tbackground-color: #f3f4f5;\n    color: #13171a;\n    min-height: 100vh;\n    padding: 10px;\n    line-height: 1.2;\n}", ""]);
+
+	// exports
+	exports.locals = {
+		"app": "App__app___3n8Cz"
+	};
 
 /***/ }
 /******/ ]);
