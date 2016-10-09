@@ -24062,7 +24062,7 @@
 	  return function (dispatch) {
 	    dispatch(requestDictionaryContent());
 	    console.log("[ fetchDictionaryContent ]");
-	    return (0, _superagent2.default)('/public/dictionary-content.json').then(function (response) {
+	    return (0, _superagent2.default)('./public/dictionary-content.json').then(function (response) {
 	      dispatch(receiveDictionaryContent(JSON.parse(response.text)));
 	    });
 	  };
@@ -24099,7 +24099,7 @@
 	  return function (dispatch) {
 	    dispatch(requestDictionaryIndex());
 	    console.log("<fetchDictionaryIndex>");
-	    return (0, _superagent2.default)('/public/dictionary-index.json').then(function (response) {
+	    return (0, _superagent2.default)('./public/dictionary-index.json').then(function (response) {
 	      dispatch(receiveDictionaryIndex(JSON.parse(response.text)));
 	    });
 	  };

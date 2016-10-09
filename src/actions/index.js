@@ -31,7 +31,7 @@ const shouldFetchDictionaryContent = (state, query) => {
 const fetchDictionaryContent = () => dispatch => {
   dispatch(requestDictionaryContent())
   console.log("[ fetchDictionaryContent ]")
-  return request(`/public/dictionary-content.json`)
+  return request(`./public/dictionary-content.json`)
          .then(response => {
             dispatch(receiveDictionaryContent(JSON.parse(response.text)))
          })        
@@ -63,7 +63,7 @@ const shouldFetchDictionaryIndex = (state, query) => {
 const fetchDictionaryIndex = () => dispatch => {
   dispatch(requestDictionaryIndex())
   console.log("<fetchDictionaryIndex>")
-  return request(`/public/dictionary-index.json`)
+  return request(`./public/dictionary-index.json`)
          .then(response => {
             dispatch(receiveDictionaryIndex(JSON.parse(response.text)))
          })        
