@@ -9,8 +9,6 @@ import LexikonEntry from '../components/LexikonEntry'
 
 class App extends Component {
   static propTypes = {
-    //inputQuery: PropTypes.string.isRequired,
-    
     isFetching: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired
   }
@@ -59,7 +57,7 @@ class App extends Component {
           (<div>
               <div>Search for: <b>{input} </b></div>
               <div>{index ? "": "No matching result."}</div>
-              <div>{index === input ? "": "Infinitiv: "+index}</div>
+              <div>{index === input ? "": (index ? "Infinitiv: "+index : "")}</div>
           </div>)
         }
         { localResults }
