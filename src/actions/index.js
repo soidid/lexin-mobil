@@ -11,7 +11,6 @@ export const RECEIVE_DICTIONARY_INDEX = 'RECEIVE_DICTIONARY_INDEX'
 
 import request from 'superagent';
 
-
 /* Fetch Dictionar Content */
 
 export const requestDictionaryContent = ()=>({
@@ -22,7 +21,7 @@ export const receiveDictionaryContent = (dictionaryContent)=>({
   dictionaryContent
 })
 const shouldFetchDictionaryContent = (state, query) => {
-  if (!state.localLexikon || !state.localLexikon.lexikonContent) {
+  if (!state.localLexikon || !state.localLexikon.content) {
     return true
   }
   else {
@@ -54,7 +53,7 @@ export const receiveDictionaryIndex = (dictionaryIndex)=>({
 })
 
 const shouldFetchDictionaryIndex = (state, query) => {
-  if (!state.key || !state.key.lexikonIndex) {
+  if (!state.searchKey || !state.searchKey.indexList) {
     return true
   }
   else {
@@ -93,29 +92,43 @@ export const receiveLexinAPI = (query, results) => ({
 })
 
 
+const parseAPIResult = (response) => {
+
+  let html = response.text
+  let matches = html.match(/<div>[\S\s]*?<\/div>/gi);
+  let b = matches[0].match(/<b>[\S\s]*?<\/b>/gi);
+  b = b[0].replace('<b>','').replace('</b>','');
+  let a = matches[0].split('\"')[1];
+
+  return {
+    audioWord: b,
+    audioLink: a
+  }
+
+}
 
 const fetchLexinAPI= query => dispatch => {
+  console.log('fetchLexinAPI **')
   dispatch(requestLexinAPI(query))
   
-  return request.get(`https://crossorigin.me/http://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_fin,katt `, false)
+  return request.get(`https://crossorigin.me/http://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_swe,${query}`, false)
                 .end((err,response) => {
-                  console.log("response:")
-                  console.log(response)
-                  dispatch(receiveLexinAPI(query, response))
+                    dispatch(receiveLexinAPI(query, parseAPIResult(response)))
                 })
 }
 
-const shouldFetchLexinAPI= (state, query) => {
+const shouldFetchLexinAPI = (state, query) => {
+
+  console.log('shouldFetchLexinAPI')
+  console.log(state)
   const results = state.webLexikon[query]
-  console.log('shouldFetchLexinAPI:')
+  console.log('shouldFetchLexinAPI - result:')
   console.log(results)
+
   if (!results) {
     return true
   }
-  if (results.isFetching) {
-    return false
-  }
-  return results.didInvalidate
+  return false
   
 }
 export const fetchLexinAPIIfNeeded = query => (dispatch, getState) => {

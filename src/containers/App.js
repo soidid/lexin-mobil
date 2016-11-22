@@ -20,11 +20,12 @@ class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // if (nextProps.searchKey.input !== this.props.searchKey.input) {
-    //   const { dispatch,  searchKey} = nextProps
-    //   console.log('!== nextProps')
-    //   dispatch(fetchLexinAPIIfNeeded(searchKey.input))
-    // }
+    if (nextProps.searchKey.input !== this.props.searchKey.input) {
+      const { dispatch,  searchKey} = nextProps
+      console.log('!== nextProps')
+      console.log('searchKey.input:' +searchKey.input)
+      dispatch(fetchLexinAPIIfNeeded(searchKey.input))
+    }
   }
 
   handleSearch = query => {

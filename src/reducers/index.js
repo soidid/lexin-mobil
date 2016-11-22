@@ -22,7 +22,7 @@ const webLexikon = (state = {}, action) => {
     case REQUEST_LEXIN_API:
       return {
         ...state,
-        [action.query]: results(state[action.query], action)
+        [action.query]: action.results
       }
     default:
       return state

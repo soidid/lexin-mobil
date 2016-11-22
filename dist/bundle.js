@@ -23935,7 +23935,7 @@
 
 	    case _actions.RECEIVE_LEXIN_API:
 	    case _actions.REQUEST_LEXIN_API:
-	      return _extends({}, state, _defineProperty({}, action.query, results(state[action.query], action)));
+	      return _extends({}, state, _defineProperty({}, action.query, action.results));
 	    default:
 	      return state;
 	  }
@@ -24036,7 +24036,7 @@
 	  };
 	};
 	var shouldFetchDictionaryContent = function shouldFetchDictionaryContent(state, query) {
-	  if (!state.localLexikon || !state.localLexikon.lexikonContent) {
+	  if (!state.localLexikon || !state.localLexikon.content) {
 	    return true;
 	  } else {
 	    return false;
@@ -24073,7 +24073,7 @@
 	};
 
 	var shouldFetchDictionaryIndex = function shouldFetchDictionaryIndex(state, query) {
-	  if (!state.key || !state.key.lexikonIndex) {
+	  if (!state.searchKey || !state.searchKey.indexList) {
 	    return true;
 	  } else {
 	    return false;
@@ -24117,29 +24117,43 @@
 	  };
 	};
 
+	var parseAPIResult = function parseAPIResult(response) {
+
+	  var html = response.text;
+	  var matches = html.match(/<div>[\S\s]*?<\/div>/gi);
+	  var b = matches[0].match(/<b>[\S\s]*?<\/b>/gi);
+	  b = b[0].replace('<b>', '').replace('</b>', '');
+	  var a = matches[0].split('\"')[1];
+
+	  return {
+	    audioWord: b,
+	    audioLink: a
+	  };
+	};
+
 	var fetchLexinAPI = function fetchLexinAPI(query) {
 	  return function (dispatch) {
+	    console.log('fetchLexinAPI **');
 	    dispatch(requestLexinAPI(query));
 
-	    return _superagent2.default.get('https://crossorigin.me/http://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_fin,katt ', false).end(function (err, response) {
-	      console.log("response:");
-	      console.log(response);
-	      dispatch(receiveLexinAPI(query, response));
+	    return _superagent2.default.get('https://crossorigin.me/http://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_swe,' + query, false).end(function (err, response) {
+	      dispatch(receiveLexinAPI(query, parseAPIResult(response)));
 	    });
 	  };
 	};
 
 	var shouldFetchLexinAPI = function shouldFetchLexinAPI(state, query) {
+
+	  console.log('shouldFetchLexinAPI');
+	  console.log(state);
 	  var results = state.webLexikon[query];
-	  console.log('shouldFetchLexinAPI:');
+	  console.log('shouldFetchLexinAPI - result:');
 	  console.log(results);
+
 	  if (!results) {
 	    return true;
 	  }
-	  if (results.isFetching) {
-	    return false;
-	  }
-	  return results.didInvalidate;
+	  return false;
 	};
 	var fetchLexinAPIIfNeeded = exports.fetchLexinAPIIfNeeded = function fetchLexinAPIIfNeeded(query) {
 	  return function (dispatch, getState) {
@@ -25807,11 +25821,14 @@
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
-	      // if (nextProps.searchKey.input !== this.props.searchKey.input) {
-	      //   const { dispatch,  searchKey} = nextProps
-	      //   console.log('!== nextProps')
-	      //   dispatch(fetchLexinAPIIfNeeded(searchKey.input))
-	      // }
+	      if (nextProps.searchKey.input !== this.props.searchKey.input) {
+	        var dispatch = nextProps.dispatch;
+	        var searchKey = nextProps.searchKey;
+
+	        console.log('!== nextProps');
+	        console.log('searchKey.input:' + searchKey.input);
+	        dispatch((0, _actions.fetchLexinAPIIfNeeded)(searchKey.input));
+	      }
 	    }
 	  }, {
 	    key: 'render',
