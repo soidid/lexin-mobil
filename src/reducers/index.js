@@ -3,7 +3,8 @@ import {
 
   INPUT_QUERY,
 
-  REQUEST_RESULTS, RECEIVE_RESULTS,
+  REQUEST_LEXIN_API, 
+  RECEIVE_LEXIN_API,
 
   REQUEST_DICTIONARY_CONTENT,
   RECEIVE_DICTIONARY_CONTENT,
@@ -14,40 +15,11 @@ import {
 } from '../actions'
 
 
-
-const results = (state = {
-  isFetching: false,
-  didInvalidate: false,
-  items: []
-}, action) => {
-  console.log("***** Results")
-
-  switch (action.type) {
-    
-    case REQUEST_RESULTS:
-      return {
-        ...state,
-        isFetching: true,
-        didInvalidate: false
-      }
-    case RECEIVE_RESULTS:
-      return {
-        ...state,
-        isFetching: false,
-        didInvalidate: false,
-        items: action.results,
-      }
-    default:
-      return state
-  }
-}
-
-
 const webLexikon = (state = {}, action) => {
   switch (action.type) {
    
-    case RECEIVE_RESULTS:
-    case REQUEST_RESULTS:
+    case RECEIVE_LEXIN_API:
+    case REQUEST_LEXIN_API:
       return {
         ...state,
         [action.query]: results(state[action.query], action)
@@ -57,28 +29,30 @@ const webLexikon = (state = {}, action) => {
   }
 }
 
-const localLexikon = (state = { input:'', index:'', lexikonIndex:'', lexikonContent:'' }, action) => {
+const localLexikon = (state = {}, action) => {
   switch (action.type) {
     case REQUEST_DICTIONARY_CONTENT: 
     case RECEIVE_DICTIONARY_CONTENT: 
       return {
-        ...state,
-        lexikonContent: action.dictionaryContent
+        content: action.dictionaryContent
       }
     
-    case REQUEST_DICTIONARY_INDEX:
-    case RECEIVE_DICTIONARY_INDEX:
-      return {
-        ...state,
-        lexikonIndex: action.dictionaryIndex
-      }
+    default:
+      return state
+  }
+}
 
+const searchKey = (state = {input:'', index:'', indexList: ''}, action) => {
+  switch (action.type) {
+    
     case INPUT_QUERY:
-      var index = '';
+      let index = '';
+      
       console.log("INPUT QUERY")
       console.log(state)
-      if(state.lexikonIndex && state.lexikonIndex[action.query]){
-        index = state.lexikonIndex[action.query]
+
+      if(state.indexList && state.indexList[action.query]){
+        index = state.indexList[action.query]
       }
       
       return {
@@ -87,14 +61,23 @@ const localLexikon = (state = { input:'', index:'', lexikonIndex:'', lexikonCont
         index: index
       }
 
+    case REQUEST_DICTIONARY_INDEX:
+    case RECEIVE_DICTIONARY_INDEX:
+      return {
+        ...state,
+        indexList: action.dictionaryIndex
+      }
+
     default:
       return state
   }
+
 }
 
 const rootReducer = combineReducers({
   localLexikon,
-  webLexikon
+  webLexikon,
+  searchKey
 })
 
 export default rootReducer

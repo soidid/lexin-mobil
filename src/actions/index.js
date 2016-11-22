@@ -1,6 +1,7 @@
 export const INPUT_QUERY = 'INPUT_QUERY'
-export const REQUEST_RESULTS = 'REQUEST_RESULTS'
-export const RECEIVE_RESULTS = 'RECEIVE_RESULTS'
+
+export const REQUEST_LEXIN_API = 'REQUEST_LEXIN_API'
+export const RECEIVE_LEXIN_API = 'RECEIVE_LEXIN_API'
 
 export const REQUEST_DICTIONARY_CONTENT = 'REQUEST_DICTIONARY_CONTENT'
 export const RECEIVE_DICTIONARY_CONTENT = 'RECEIVE_DICTIONARY_CONTENT'
@@ -53,7 +54,7 @@ export const receiveDictionaryIndex = (dictionaryIndex)=>({
 })
 
 const shouldFetchDictionaryIndex = (state, query) => {
-  if (!state.localLexikon || !state.localLexikon.lexikonIndex) {
+  if (!state.key || !state.key.lexikonIndex) {
     return true
   }
   else {
@@ -74,41 +75,40 @@ export const fetchDictionaryIndexIfNeeded = () => (dispatch, getState) => {
   }
 }
 
-/********/
-
 export const inputQuery = query => ({
   type: INPUT_QUERY,
   query
 })
 
 
-/********/
 
-export const requestResults = query => ({
-  type: REQUEST_RESULTS,
+export const requestLexinAPI = query => ({
+  type: REQUEST_LEXIN_API,
   query
 })
-export const receiveResults = (query, results) => ({
-  type: RECEIVE_RESULTS,
+export const receiveLexinAPI = (query, results) => ({
+  type: RECEIVE_LEXIN_API,
   query,
   results: results
 })
 
 
 
-const fetchResults = query => dispatch => {
-  dispatch(requestResults(query))
-  console.log("HHH")
+const fetchLexinAPI= query => dispatch => {
+  dispatch(requestLexinAPI(query))
+  
   return request.get(`https://crossorigin.me/http://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_fin,katt `, false)
                 .end((err,response) => {
                   console.log("response:")
                   console.log(response)
-                  dispatch(receiveResults(query, response))
+                  dispatch(receiveLexinAPI(query, response))
                 })
 }
 
-const shouldFetchResults = (state, query) => {
+const shouldFetchLexinAPI= (state, query) => {
   const results = state.webLexikon[query]
+  console.log('shouldFetchLexinAPI:')
+  console.log(results)
   if (!results) {
     return true
   }
@@ -118,8 +118,8 @@ const shouldFetchResults = (state, query) => {
   return results.didInvalidate
   
 }
-export const fetchResultIfNeeded = query => (dispatch, getState) => {
-  if (shouldFetchResults(getState(), query)) {
-    return dispatch(fetchResults(query))
+export const fetchLexinAPIIfNeeded = query => (dispatch, getState) => {
+  if (shouldFetchLexinAPI(getState(), query)) {
+    return dispatch(fetchLexinAPI(query))
   }
 }

@@ -26,6 +26,7 @@
   },
   "scripts": {
     "start": "npm run build && webpack-dev-server",
+    "dev": "webpack-dev-server",
     "build": "webpack --progress --colors"
   },
   "eslintConfig": {

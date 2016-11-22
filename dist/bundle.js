@@ -23927,42 +23927,14 @@
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-	var results = function results() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
-	    isFetching: false,
-	    didInvalidate: false,
-	    items: []
-	  };
-	  var action = arguments[1];
-
-	  console.log("***** Results");
-
-	  switch (action.type) {
-
-	    case _actions.REQUEST_RESULTS:
-	      return _extends({}, state, {
-	        isFetching: true,
-	        didInvalidate: false
-	      });
-	    case _actions.RECEIVE_RESULTS:
-	      return _extends({}, state, {
-	        isFetching: false,
-	        didInvalidate: false,
-	        items: action.results
-	      });
-	    default:
-	      return state;
-	  }
-	};
-
 	var webLexikon = function webLexikon() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	  var action = arguments[1];
 
 	  switch (action.type) {
 
-	    case _actions.RECEIVE_RESULTS:
-	    case _actions.REQUEST_RESULTS:
+	    case _actions.RECEIVE_LEXIN_API:
+	    case _actions.REQUEST_LEXIN_API:
 	      return _extends({}, state, _defineProperty({}, action.query, results(state[action.query], action)));
 	    default:
 	      return state;
@@ -23970,33 +23942,46 @@
 	};
 
 	var localLexikon = function localLexikon() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { input: '', index: '', lexikonIndex: '', lexikonContent: '' };
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	  var action = arguments[1];
 
 	  switch (action.type) {
 	    case _actions.REQUEST_DICTIONARY_CONTENT:
 	    case _actions.RECEIVE_DICTIONARY_CONTENT:
-	      return _extends({}, state, {
-	        lexikonContent: action.dictionaryContent
-	      });
+	      return {
+	        content: action.dictionaryContent
+	      };
 
-	    case _actions.REQUEST_DICTIONARY_INDEX:
-	    case _actions.RECEIVE_DICTIONARY_INDEX:
-	      return _extends({}, state, {
-	        lexikonIndex: action.dictionaryIndex
-	      });
+	    default:
+	      return state;
+	  }
+	};
+
+	var searchKey = function searchKey() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { input: '', index: '', indexList: '' };
+	  var action = arguments[1];
+
+	  switch (action.type) {
 
 	    case _actions.INPUT_QUERY:
 	      var index = '';
+
 	      console.log("INPUT QUERY");
 	      console.log(state);
-	      if (state.lexikonIndex && state.lexikonIndex[action.query]) {
-	        index = state.lexikonIndex[action.query];
+
+	      if (state.indexList && state.indexList[action.query]) {
+	        index = state.indexList[action.query];
 	      }
 
 	      return _extends({}, state, {
 	        input: action.query,
 	        index: index
+	      });
+
+	    case _actions.REQUEST_DICTIONARY_INDEX:
+	    case _actions.RECEIVE_DICTIONARY_INDEX:
+	      return _extends({}, state, {
+	        indexList: action.dictionaryIndex
 	      });
 
 	    default:
@@ -24006,7 +23991,8 @@
 
 	var rootReducer = (0, _redux.combineReducers)({
 	  localLexikon: localLexikon,
-	  webLexikon: webLexikon
+	  webLexikon: webLexikon,
+	  searchKey: searchKey
 	});
 
 	exports.default = rootReducer;
@@ -24020,7 +24006,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.fetchResultIfNeeded = exports.receiveResults = exports.requestResults = exports.inputQuery = exports.fetchDictionaryIndexIfNeeded = exports.receiveDictionaryIndex = exports.requestDictionaryIndex = exports.fetchDictionaryContentIfNeeded = exports.receiveDictionaryContent = exports.requestDictionaryContent = exports.RECEIVE_DICTIONARY_INDEX = exports.REQUEST_DICTIONARY_INDEX = exports.RECEIVE_DICTIONARY_CONTENT = exports.REQUEST_DICTIONARY_CONTENT = exports.RECEIVE_RESULTS = exports.REQUEST_RESULTS = exports.INPUT_QUERY = undefined;
+	exports.fetchLexinAPIIfNeeded = exports.receiveLexinAPI = exports.requestLexinAPI = exports.inputQuery = exports.fetchDictionaryIndexIfNeeded = exports.receiveDictionaryIndex = exports.requestDictionaryIndex = exports.fetchDictionaryContentIfNeeded = exports.receiveDictionaryContent = exports.requestDictionaryContent = exports.RECEIVE_DICTIONARY_INDEX = exports.REQUEST_DICTIONARY_INDEX = exports.RECEIVE_DICTIONARY_CONTENT = exports.REQUEST_DICTIONARY_CONTENT = exports.RECEIVE_LEXIN_API = exports.REQUEST_LEXIN_API = exports.INPUT_QUERY = undefined;
 
 	var _superagent = __webpack_require__(204);
 
@@ -24029,8 +24015,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var INPUT_QUERY = exports.INPUT_QUERY = 'INPUT_QUERY';
-	var REQUEST_RESULTS = exports.REQUEST_RESULTS = 'REQUEST_RESULTS';
-	var RECEIVE_RESULTS = exports.RECEIVE_RESULTS = 'RECEIVE_RESULTS';
+
+	var REQUEST_LEXIN_API = exports.REQUEST_LEXIN_API = 'REQUEST_LEXIN_API';
+	var RECEIVE_LEXIN_API = exports.RECEIVE_LEXIN_API = 'RECEIVE_LEXIN_API';
 
 	var REQUEST_DICTIONARY_CONTENT = exports.REQUEST_DICTIONARY_CONTENT = 'REQUEST_DICTIONARY_CONTENT';
 	var RECEIVE_DICTIONARY_CONTENT = exports.RECEIVE_DICTIONARY_CONTENT = 'RECEIVE_DICTIONARY_CONTENT';
@@ -24089,7 +24076,7 @@
 	};
 
 	var shouldFetchDictionaryIndex = function shouldFetchDictionaryIndex(state, query) {
-	  if (!state.localLexikon || !state.localLexikon.lexikonIndex) {
+	  if (!state.key || !state.key.lexikonIndex) {
 	    return true;
 	  } else {
 	    return false;
@@ -24112,8 +24099,6 @@
 	  };
 	};
 
-	/********/
-
 	var inputQuery = exports.inputQuery = function inputQuery(query) {
 	  return {
 	    type: INPUT_QUERY,
@@ -24121,36 +24106,36 @@
 	  };
 	};
 
-	/********/
-
-	var requestResults = exports.requestResults = function requestResults(query) {
+	var requestLexinAPI = exports.requestLexinAPI = function requestLexinAPI(query) {
 	  return {
-	    type: REQUEST_RESULTS,
+	    type: REQUEST_LEXIN_API,
 	    query: query
 	  };
 	};
-	var receiveResults = exports.receiveResults = function receiveResults(query, results) {
+	var receiveLexinAPI = exports.receiveLexinAPI = function receiveLexinAPI(query, results) {
 	  return {
-	    type: RECEIVE_RESULTS,
+	    type: RECEIVE_LEXIN_API,
 	    query: query,
 	    results: results
 	  };
 	};
 
-	var fetchResults = function fetchResults(query) {
+	var fetchLexinAPI = function fetchLexinAPI(query) {
 	  return function (dispatch) {
-	    dispatch(requestResults(query));
-	    console.log("HHH");
+	    dispatch(requestLexinAPI(query));
+
 	    return _superagent2.default.get('https://crossorigin.me/http://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_fin,katt ', false).end(function (err, response) {
 	      console.log("response:");
 	      console.log(response);
-	      dispatch(receiveResults(query, response));
+	      dispatch(receiveLexinAPI(query, response));
 	    });
 	  };
 	};
 
-	var shouldFetchResults = function shouldFetchResults(state, query) {
+	var shouldFetchLexinAPI = function shouldFetchLexinAPI(state, query) {
 	  var results = state.webLexikon[query];
+	  console.log('shouldFetchLexinAPI:');
+	  console.log(results);
 	  if (!results) {
 	    return true;
 	  }
@@ -24159,10 +24144,10 @@
 	  }
 	  return results.didInvalidate;
 	};
-	var fetchResultIfNeeded = exports.fetchResultIfNeeded = function fetchResultIfNeeded(query) {
+	var fetchLexinAPIIfNeeded = exports.fetchLexinAPIIfNeeded = function fetchLexinAPIIfNeeded(query) {
 	  return function (dispatch, getState) {
-	    if (shouldFetchResults(getState(), query)) {
-	      return dispatch(fetchResults(query));
+	    if (shouldFetchLexinAPI(getState(), query)) {
+	      return dispatch(fetchLexinAPI(query));
 	    }
 	  };
 	};
@@ -25829,19 +25814,23 @@
 	      if (nextProps.inputQuery !== this.props.inputQuery) {
 	        var dispatch = nextProps.dispatch;
 	        var _inputQuery = nextProps.inputQuery;
-	        //dispatch(fetchResultIfNeeded(inputQuery))
+
+	        console.log('!== nextProps');
+	        dispatch((0, _actions.fetchLexinAPIIfNeeded)(_inputQuery));
 	      }
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      console.log(this.props);
 	      var _props2 = this.props;
-	      var isFetching = _props2.isFetching;
-	      var results = _props2.results;
 	      var localLexikon = _props2.localLexikon;
-	      var input = localLexikon.input;
-	      var index = localLexikon.index;
-	      var lexikonContent = localLexikon.lexikonContent;
+	      var searchKey = _props2.searchKey;
+
+
+	      var lexikonContent = localLexikon.content;
+	      var input = searchKey.input;
+	      var index = searchKey.index;
 
 	      /* local content */
 
@@ -25892,7 +25881,6 @@
 	}(_react.Component);
 
 	App.propTypes = {
-	  isFetching: _react.PropTypes.bool.isRequired,
 	  dispatch: _react.PropTypes.func.isRequired
 	};
 
@@ -25900,20 +25888,13 @@
 	var mapStateToProps = function mapStateToProps(state) {
 	  var webLexikon = state.webLexikon;
 	  var localLexikon = state.localLexikon;
+	  var searchKey = state.searchKey;
 
-	  var _ref2 = webLexikon[_actions.inputQuery] || {
-	    isFetching: true,
-	    items: []
-	  };
-
-	  var isFetching = _ref2.isFetching;
-	  var results = _ref2.items;
 
 	  return {
-	    isFetching: isFetching,
-	    results: results,
 	    localLexikon: localLexikon,
-	    webLexikon: webLexikon
+	    webLexikon: webLexikon,
+	    searchKey: searchKey
 	  };
 	};
 

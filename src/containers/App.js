@@ -2,14 +2,14 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { inputQuery,
          fetchDictionaryIndexIfNeeded,
-         fetchDictionaryContentIfNeeded} from '../actions'
+         fetchDictionaryContentIfNeeded,
+         fetchLexinAPIIfNeeded } from '../actions'
 import Search from '../components/Search/Search'
 import LexikonEntry from '../components/LexikonEntry/LexikonEntry'
 import styles from "./App.css";
 
 class App extends Component {
   static propTypes = {
-    isFetching: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired
   }
 
@@ -22,7 +22,8 @@ class App extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.inputQuery !== this.props.inputQuery) {
       const { dispatch,  inputQuery } = nextProps
-      //dispatch(fetchResultIfNeeded(inputQuery))
+      console.log('!== nextProps')
+      dispatch(fetchLexinAPIIfNeeded(inputQuery))
     }
   }
 
@@ -32,13 +33,15 @@ class App extends Component {
   }
 
   render() {
-    const { isFetching, 
-            results, 
-            localLexikon } = this.props
-    const { input, index, lexikonContent } = localLexikon
+    console.log(this.props)
+    const { localLexikon, searchKey } = this.props
+   
+    const lexikonContent = localLexikon.content
+    const { input, index } = searchKey
+    
 
 
-    /* local content */
+    /* Local Lexkin Content */
     let localResults = "";
     if(index){
       if(lexikonContent[index]){
@@ -69,21 +72,13 @@ class App extends Component {
 
 const mapStateToProps = state => {
   const { webLexikon, 
-          localLexikon } = state
+          localLexikon,
+          searchKey } = state
   
-  
-  const {
-    isFetching,
-    items: results
-  } = webLexikon[inputQuery] || {
-    isFetching: true,
-    items: []
-  }
   return {
-    isFetching,
-    results,
     localLexikon,
-    webLexikon
+    webLexikon,
+    searchKey
   }
 }
 
