@@ -1,0 +1,16 @@
+.audioPart {
+	margin: 2px auto;
+}
+.audioTitle {
+	color: #317eb5;
+	margin: 0;
+	font-weight: 800;
+    font-size: 14px;
+}
+.audioWord {
+    font-size: 14px;
+    margin: 10px;
+}
+.audioUttal {
+	font: 12px monospace;
+}

@@ -98,10 +98,13 @@ const parseAPIResult = (response) => {
   let matches = html.match(/<div>[\S\s]*?<\/div>/gi);
   let b = matches[0].match(/<b>[\S\s]*?<\/b>/gi);
   b = b[0].replace('<b>','').replace('</b>','');
+
+  let u = matches[0].split('[')[1].split(']')[0];
   let a = matches[0].split('\"')[1];
 
   return {
     audioWord: b,
+    audioUttal: u,
     audioLink: a
   }
 

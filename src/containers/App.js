@@ -35,10 +35,12 @@ class App extends Component {
 
   render() {
     console.log(this.props)
-    const { localLexikon, searchKey } = this.props
+    const { localLexikon, webLexikon, searchKey } = this.props
    
     const lexikonContent = localLexikon.content || {}
     const { input, index } = searchKey
+
+    const audioData = webLexikon[input];
    
     return (
       <div className={styles.app}>
@@ -52,7 +54,7 @@ class App extends Component {
               <div>{index === input ? "": (index ? "Key: "+index : "")}</div>
           </div>)
         }
-        <LocalLexikon lexikonEntries={lexikonContent[index]} />
+        <LocalLexikon index={index} lexikonEntries={lexikonContent[index]} audioData={audioData}/>
         
       </div>
     )

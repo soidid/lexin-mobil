@@ -24123,10 +24123,13 @@
 	  var matches = html.match(/<div>[\S\s]*?<\/div>/gi);
 	  var b = matches[0].match(/<b>[\S\s]*?<\/b>/gi);
 	  b = b[0].replace('<b>', '').replace('</b>', '');
+
+	  var u = matches[0].split('[')[1].split(']')[0];
 	  var a = matches[0].split('\"')[1];
 
 	  return {
 	    audioWord: b,
+	    audioUttal: u,
 	    audioLink: a
 	  };
 	};
@@ -25777,7 +25780,7 @@
 
 	var _LocalLexikon2 = _interopRequireDefault(_LocalLexikon);
 
-	var _App = __webpack_require__(219);
+	var _App = __webpack_require__(221);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -25836,6 +25839,7 @@
 	      console.log(this.props);
 	      var _props2 = this.props;
 	      var localLexikon = _props2.localLexikon;
+	      var webLexikon = _props2.webLexikon;
 	      var searchKey = _props2.searchKey;
 
 
@@ -25843,6 +25847,8 @@
 	      var input = searchKey.input;
 	      var index = searchKey.index;
 
+
+	      var audioData = webLexikon[input];
 
 	      return _react2.default.createElement(
 	        'div',
@@ -25873,7 +25879,7 @@
 	            index === input ? "" : index ? "Key: " + index : ""
 	          )
 	        ),
-	        _react2.default.createElement(_LocalLexikon2.default, { lexikonEntries: lexikonContent[index] })
+	        _react2.default.createElement(_LocalLexikon2.default, { index: index, lexikonEntries: lexikonContent[index], audioData: audioData })
 	      );
 	    }
 	  }]);
@@ -25993,7 +25999,7 @@
 
 
 	// module
-	exports.push([module.id, ".Search__search___HZgNE {\n\tmargin: 2px 0 20px 0;\n    text-align: center;\n}\n.Search__input___3nCkp {\n    height: 33px;\n    width: calc(100% - 100px);\n    margin: 0 2px 0 0;\n    padding: 0px 8px;\n}\n.Search__input___3nCkp:focus {\n\toutline: none;\n}\n.Search__submit___kIr8K {\n\theight: 36px;\n    font: 13px BlinkMacSystemFont;\n    background: #27a6b3;\n    color: white;\n    border: 1px solid;\n    vertical-align: top;\n}", ""]);
+	exports.push([module.id, ".Search__search___HZgNE {\n\tmargin: 2px 0 20px 0;\n    text-align: center;\n}\n.Search__input___3nCkp {\n    height: 33px;\n    width: calc(100% - 100px);\n    margin: 0 2px 0 0;\n    padding: 0px 8px;\n}\n.Search__input___3nCkp:focus {\n\toutline: none;\n}\n.Search__submit___kIr8K {\n\theight: 36px;\n    font: 13px BlinkMacSystemFont;\n    background: #418fca;\n    color: white;\n    border: 1px solid;\n    vertical-align: top;\n}", ""]);
 
 	// exports
 	exports.locals = {
@@ -26324,34 +26330,127 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _LexikonEntry = __webpack_require__(216);
+	var _LocalLexikon = __webpack_require__(216);
+
+	var _LocalLexikon2 = _interopRequireDefault(_LocalLexikon);
+
+	var _LexikonEntry = __webpack_require__(218);
 
 	var _LexikonEntry2 = _interopRequireDefault(_LexikonEntry);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var LocalLexikon = function LocalLexikon(_ref) {
+	  var index = _ref.index;
 	  var lexikonEntries = _ref.lexikonEntries;
+	  var audioData = _ref.audioData;
 
 
 	  if (!lexikonEntries) {
 	    return _react2.default.createElement('div', null);
 	  }
+	  var audioContent = _react2.default.createElement(
+	    'div',
+	    { className: _LocalLexikon2.default.audioTitle },
+	    '(Loading audio files)'
+	  );
+	  if (audioData) {
+	    var audioWord = audioData.audioWord;
+	    var audioUttal = audioData.audioUttal;
+	    var audioLink = audioData.audioLink;
+
+	    audioContent = _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'div',
+	        { className: _LocalLexikon2.default.audioWord },
+	        audioWord,
+	        ' ',
+	        _react2.default.createElement(
+	          'span',
+	          { className: _LocalLexikon2.default.audioUttal },
+	          '[',
+	          audioUttal,
+	          ']'
+	        )
+	      ),
+	      _react2.default.createElement('audio', { src: audioLink, preload: 'auto', controls: true })
+	    );
+	  }
 	  return _react2.default.createElement(
 	    'div',
 	    null,
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      index
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      { className: _LocalLexikon2.default.audioPart },
+	      _react2.default.createElement(
+	        'div',
+	        { className: _LocalLexikon2.default.audioTitle },
+	        'LYSSNA'
+	      ),
+	      audioContent
+	    ),
 	    lexikonEntries.map(function (item, i) {
 	      return _react2.default.createElement(_LexikonEntry2.default, { entry: item, key: item + i });
 	    })
 	  );
 	};
-	// import styles from './LocalLexikon.css'
-
 
 	exports.default = LocalLexikon;
 
 /***/ },
 /* 216 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(217);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(214)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js?modules=true&localIdentName=[name]__[local]___[hash:base64:5]!./LocalLexikon.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js?modules=true&localIdentName=[name]__[local]___[hash:base64:5]!./LocalLexikon.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 217 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(213)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".LocalLexikon__audioPart___3Ka7g {\n\tmargin: 2px auto;\n}\n.LocalLexikon__audioTitle___1dRkZ {\n\tcolor: #317eb5;\n\tmargin: 0;\n\tfont-weight: 800;\n    font-size: 14px;\n}\n.LocalLexikon__audioWord___PQRgJ {\n    font-size: 14px;\n    margin: 10px;\n}\n.LocalLexikon__audioUttal___1t5nu {\n\tfont: 12px monospace;\n}", ""]);
+
+	// exports
+	exports.locals = {
+		"audioPart": "LocalLexikon__audioPart___3Ka7g",
+		"audioTitle": "LocalLexikon__audioTitle___1dRkZ",
+		"audioWord": "LocalLexikon__audioWord___PQRgJ",
+		"audioUttal": "LocalLexikon__audioUttal___1t5nu"
+	};
+
+/***/ },
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26364,7 +26463,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _LexikonEntry = __webpack_require__(217);
+	var _LexikonEntry = __webpack_require__(219);
 
 	var _LexikonEntry2 = _interopRequireDefault(_LexikonEntry);
 
@@ -26534,13 +26633,13 @@
 	exports.default = LexikonEntry;
 
 /***/ },
-/* 217 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(218);
+	var content = __webpack_require__(220);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(214)(content, {});
@@ -26560,7 +26659,7 @@
 	}
 
 /***/ },
-/* 218 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(213)();
@@ -26576,13 +26675,13 @@
 	};
 
 /***/ },
-/* 219 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(220);
+	var content = __webpack_require__(222);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(214)(content, {});
@@ -26602,7 +26701,7 @@
 	}
 
 /***/ },
-/* 220 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(213)();
