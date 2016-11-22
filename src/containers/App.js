@@ -5,7 +5,7 @@ import { inputQuery,
          fetchDictionaryContentIfNeeded,
          fetchLexinAPIIfNeeded } from '../actions'
 import Search from '../components/Search/Search'
-import LexikonEntry from '../components/LexikonEntry/LexikonEntry'
+import LocalLexikon from '../components/LocalLexikon/LocalLexikon'
 import styles from "./App.css";
 
 class App extends Component {
@@ -20,36 +20,24 @@ class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.inputQuery !== this.props.inputQuery) {
-      const { dispatch,  inputQuery } = nextProps
-      console.log('!== nextProps')
-      dispatch(fetchLexinAPIIfNeeded(inputQuery))
-    }
+    // if (nextProps.searchKey.input !== this.props.searchKey.input) {
+    //   const { dispatch,  searchKey} = nextProps
+    //   console.log('!== nextProps')
+    //   dispatch(fetchLexinAPIIfNeeded(searchKey.input))
+    // }
   }
 
   handleSearch = query => {
     this.props.dispatch(inputQuery(query))
-    console.log(`input: ${query}`)
+    
   }
 
   render() {
     console.log(this.props)
     const { localLexikon, searchKey } = this.props
    
-    const lexikonContent = localLexikon.content
+    const lexikonContent = localLexikon.content || {}
     const { input, index } = searchKey
-    
-
-
-    /* Local Lexkin Content */
-    let localResults = "";
-    if(index){
-      if(lexikonContent[index]){
-          localResults = lexikonContent[index].map((item, i)=>{
-              return <LexikonEntry entry={item} key={item+i}/>
-          })
-      }
-    }
    
     return (
       <div className={styles.app}>
@@ -63,7 +51,7 @@ class App extends Component {
               <div>{index === input ? "": (index ? "Key: "+index : "")}</div>
           </div>)
         }
-        { localResults }
+        <LocalLexikon lexikonEntries={lexikonContent[index]} />
         
       </div>
     )

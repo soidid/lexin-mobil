@@ -23966,9 +23966,6 @@
 	    case _actions.INPUT_QUERY:
 	      var index = '';
 
-	      console.log("INPUT QUERY");
-	      console.log(state);
-
 	      if (state.indexList && state.indexList[action.query]) {
 	        index = state.indexList[action.query];
 	      }
@@ -25762,11 +25759,11 @@
 
 	var _Search2 = _interopRequireDefault(_Search);
 
-	var _LexikonEntry = __webpack_require__(215);
+	var _LocalLexikon = __webpack_require__(215);
 
-	var _LexikonEntry2 = _interopRequireDefault(_LexikonEntry);
+	var _LocalLexikon2 = _interopRequireDefault(_LocalLexikon);
 
-	var _App = __webpack_require__(218);
+	var _App = __webpack_require__(219);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -25794,7 +25791,6 @@
 
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = App.__proto__ || Object.getPrototypeOf(App)).call.apply(_ref, [this].concat(args))), _this), _this.handleSearch = function (query) {
 	      _this.props.dispatch((0, _actions.inputQuery)(query));
-	      console.log('input: ' + query);
 	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 
@@ -25811,13 +25807,11 @@
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
-	      if (nextProps.inputQuery !== this.props.inputQuery) {
-	        var dispatch = nextProps.dispatch;
-	        var _inputQuery = nextProps.inputQuery;
-
-	        console.log('!== nextProps');
-	        dispatch((0, _actions.fetchLexinAPIIfNeeded)(_inputQuery));
-	      }
+	      // if (nextProps.searchKey.input !== this.props.searchKey.input) {
+	      //   const { dispatch,  searchKey} = nextProps
+	      //   console.log('!== nextProps')
+	      //   dispatch(fetchLexinAPIIfNeeded(searchKey.input))
+	      // }
 	    }
 	  }, {
 	    key: 'render',
@@ -25828,20 +25822,10 @@
 	      var searchKey = _props2.searchKey;
 
 
-	      var lexikonContent = localLexikon.content;
+	      var lexikonContent = localLexikon.content || {};
 	      var input = searchKey.input;
 	      var index = searchKey.index;
 
-	      /* local content */
-
-	      var localResults = "";
-	      if (index) {
-	        if (lexikonContent[index]) {
-	          localResults = lexikonContent[index].map(function (item, i) {
-	            return _react2.default.createElement(_LexikonEntry2.default, { entry: item, key: item + i });
-	          });
-	        }
-	      }
 
 	      return _react2.default.createElement(
 	        'div',
@@ -25872,7 +25856,7 @@
 	            index === input ? "" : index ? "Key: " + index : ""
 	          )
 	        ),
-	        localResults
+	        _react2.default.createElement(_LocalLexikon2.default, { lexikonEntries: lexikonContent[index] })
 	      );
 	    }
 	  }]);
@@ -26329,6 +26313,46 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var LocalLexikon = function LocalLexikon(_ref) {
+	  var lexikonEntries = _ref.lexikonEntries;
+
+
+	  if (!lexikonEntries) {
+	    return _react2.default.createElement('div', null);
+	  }
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    lexikonEntries.map(function (item, i) {
+	      return _react2.default.createElement(_LexikonEntry2.default, { entry: item, key: item + i });
+	    })
+	  );
+	};
+	// import styles from './LocalLexikon.css'
+
+
+	exports.default = LocalLexikon;
+
+/***/ },
+/* 216 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _LexikonEntry = __webpack_require__(217);
+
+	var _LexikonEntry2 = _interopRequireDefault(_LexikonEntry);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var parseVerb = function parseVerb(current) {
 	  if (!current || !current.paradigm || !current.paradigm.inflection) {
 	    return false;
@@ -26381,6 +26405,8 @@
 	  var category = parseCategory(entry.class);
 	  var inflection = '';
 	  var inflectionBlock = '';
+
+	  console.log(entry);
 
 	  switch (category) {
 	    case 'substantiv':
@@ -26491,13 +26517,13 @@
 	exports.default = LexikonEntry;
 
 /***/ },
-/* 216 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(217);
+	var content = __webpack_require__(218);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(214)(content, {});
@@ -26517,7 +26543,7 @@
 	}
 
 /***/ },
-/* 217 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(213)();
@@ -26533,13 +26559,13 @@
 	};
 
 /***/ },
-/* 218 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(219);
+	var content = __webpack_require__(220);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(214)(content, {});
@@ -26559,7 +26585,7 @@
 	}
 
 /***/ },
-/* 219 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(213)();

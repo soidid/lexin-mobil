@@ -47,9 +47,6 @@ const searchKey = (state = {input:'', index:'', indexList: ''}, action) => {
     
     case INPUT_QUERY:
       let index = '';
-      
-      console.log("INPUT QUERY")
-      console.log(state)
 
       if(state.indexList && state.indexList[action.query]){
         index = state.indexList[action.query]

@@ -69,6 +69,8 @@ const LexikonEntry = ({ entry }) => {
   let inflection = '';
   let inflectionBlock = '';
 
+  console.log(entry)
+
   switch(category){
     case 'substantiv':
       inflection = parseSubstantiv(entry);
