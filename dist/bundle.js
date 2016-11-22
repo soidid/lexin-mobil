@@ -25993,7 +25993,7 @@
 
 
 	// module
-	exports.push([module.id, ".Search__search___HZgNE {\n\tmargin: 2px 0 20px 0;\n    text-align: center;\n}\n.Search__input___3nCkp {\n    height: 33px;\n    width: calc(100% - 100px);\n    margin: 0 2px 0 0;\n    padding: 0px 8px;\n}\n.Search__input___3nCkp:focus {\n\toutline: none;\n}\n.Search__submit___kIr8K {\n\theight: 36px;\n    background: #F8766B;\n    color: white;\n    border: 1px solid;\n    vertical-align: top;\n}", ""]);
+	exports.push([module.id, ".Search__search___HZgNE {\n\tmargin: 2px 0 20px 0;\n    text-align: center;\n}\n.Search__input___3nCkp {\n    height: 33px;\n    width: calc(100% - 100px);\n    margin: 0 2px 0 0;\n    padding: 0px 8px;\n}\n.Search__input___3nCkp:focus {\n\toutline: none;\n}\n.Search__submit___kIr8K {\n\theight: 36px;\n    font: 13px BlinkMacSystemFont;\n    background: #27a6b3;\n    color: white;\n    border: 1px solid;\n    vertical-align: top;\n}", ""]);
 
 	// exports
 	exports.locals = {

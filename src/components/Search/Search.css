@@ -13,7 +13,8 @@
 }
 .submit {
 	height: 36px;
-    background: #F8766B;
+    font: 13px BlinkMacSystemFont;
+    background: #27a6b3;
     color: white;
     border: 1px solid;
     vertical-align: top;
