@@ -25780,7 +25780,7 @@
 
 	var _LocalLexikon2 = _interopRequireDefault(_LocalLexikon);
 
-	var _App = __webpack_require__(221);
+	var _App = __webpack_require__(222);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -26467,165 +26467,51 @@
 
 	var _LexikonEntry2 = _interopRequireDefault(_LexikonEntry);
 
+	var _parseLexikonEntry = __webpack_require__(221);
+
+	var _parseLexikonEntry2 = _interopRequireDefault(_parseLexikonEntry);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var parseVerb = function parseVerb(current) {
-	  if (!current || !current.paradigm || !current.paradigm.inflection) {
-	    return false;
-	  } else {
-
-	    if (current.paradigm.inflection.length === 5) {
-	      return [current.paradigm.inflection[2].value, current.paradigm.inflection[3].value, current.paradigm.inflection[4].value, current.paradigm.inflection[0].value, current.paradigm.inflection[1].value];
-	    } else {
-	      //Imperativ === Infinitiv
-	      return [current.paradigm.inflection[2].value, current.paradigm.inflection[2].value, current.paradigm.inflection[3].value, current.paradigm.inflection[0].value, current.paradigm.inflection[1].value];
-	    }
-	  }
-	};
-	var parseSubstantiv = function parseSubstantiv(current) {
-	  if (!current || !current.paradigm || !current.paradigm.inflection) {
-	    return false;
-	  } else {
-	    return [current.paradigm.inflection[0].value, current.paradigm.inflection[1].value];
-	  }
-	};
-	var parseEttEn = function parseEttEn(current) {
-	  if (!current || !current.paradigm || !current.paradigm.inflection) {
-	    return false;
-	  } else {
-	    var bestamd = current.paradigm.inflection[0].value;
-	    var lastCharacter = bestamd.slice(-1);
-	    if (lastCharacter === 'n') {
-	      return 'en';
-	    } else {
-	      return 'ett';
-	    }
-	  }
-	};
-	var parseCategory = function parseCategory(name) {
-	  switch (name) {
-	    case 'jj':
-	      return 'adjektiv';
-	    case 'vb':
-	      return 'verb';
-	    case 'nn':
-	      return 'substantiv';
-	    default:
-	      return '(?)';
-	  }
-	};
 
 	var LexikonEntry = function LexikonEntry(_ref) {
 	  var entry = _ref.entry;
 
-	  var category = parseCategory(entry.class);
-	  var inflection = '';
-	  var inflectionBlock = '';
 
 	  console.log(entry);
+	  var word = (0, _parseLexikonEntry2.default)(entry);
 
-	  switch (category) {
-	    case 'substantiv':
-	      inflection = parseSubstantiv(entry);
-	      var etten = parseEttEn(entry);
-	      inflectionBlock = _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          etten,
-	          ' ',
-	          entry.value
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          inflection[0]
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          '2 ',
-	          inflection[1]
-	        )
-	      );
-	      break;
-
-	    case 'verb':
-	      inflection = parseVerb(entry);
-	      inflectionBlock = _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'span',
-	            { className: _LexikonEntry2.default.fix },
-	            'Imperativ:'
-	          ),
-	          inflection[0],
-	          '!'
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'span',
-	            { className: _LexikonEntry2.default.fix },
-	            'Infinitiv:'
-	          ),
-	          inflection[1]
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'span',
-	            { className: _LexikonEntry2.default.fix },
-	            'Presens:'
-	          ),
-	          inflection[2]
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'span',
-	            { className: _LexikonEntry2.default.fix },
-	            'Preteritum'
-	          ),
-	          inflection[3]
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'span',
-	            { className: _LexikonEntry2.default.fix },
-	            'Supinum:'
-	          ),
-	          'har ',
-	          inflection[4]
-	        )
-	      );
-	      break;
-
-	  }
+	  console.log(word);
 	  return _react2.default.createElement(
 	    'div',
 	    null,
+	    '(',
+	    word.category,
+	    ') ',
+	    word.translation.map(function (t, i) {
+	      return '' + t + (i === word.translation.length - 1 ? "" : ", ");
+	    }),
 	    _react2.default.createElement('br', null),
 	    _react2.default.createElement(
 	      'div',
 	      null,
-	      '(',
-	      category,
-	      ')',
-	      entry.translation.value
+	      word.inflections.map(function (t, i) {
+	        return '' + t + (i === word.inflections.length - 1 ? "" : ", ");
+	      })
 	    ),
-	    inflectionBlock,
+	    _react2.default.createElement(
+	      'ul',
+	      null,
+	      word.examples.map(function (e, i) {
+	        return _react2.default.createElement(
+	          'li',
+	          { key: e.value.slice(0, 5) + '-' + i },
+	          e.value,
+	          '.',
+	          " ",
+	          e.translation ? '(' + e.translation + ')' : ''
+	        );
+	      })
+	    ),
 	    _react2.default.createElement('hr', null)
 	  );
 	};
@@ -26676,12 +26562,138 @@
 
 /***/ },
 /* 221 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var decodeHtml = function decodeHtml(html) {
+	  var txt = document.createElement("textarea");
+	  txt.innerHTML = html;
+	  return txt.value;
+	};
+
+	var parseInflectionsVerb = function parseInflectionsVerb(current) {
+	  if (!current || !current.paradigm || !current.paradigm.inflection) {
+	    return false;
+	  } else {
+
+	    // Infinitiv
+	    // Presens
+	    // Preteritum
+	    // Supinum
+	    // Imperativ
+	    if (current.paradigm.inflection.length === 5) {
+	      return ['att ' + current.paradigm.inflection[3].value, current.paradigm.inflection[4].value, current.paradigm.inflection[0].value, 'har ' + current.paradigm.inflection[1].value, current.paradigm.inflection[2].value + '!'];
+	    } else {
+	      //Imperativ === Infinitiv
+	      return ['att ' + current.paradigm.inflection[2].value, current.paradigm.inflection[3].value, current.paradigm.inflection[0].value, 'har ' + current.paradigm.inflection[1].value, current.paradigm.inflection[2].value + '!'];
+	    }
+	  }
+	};
+
+	var parseEttEn = function parseEttEn(bestamd) {
+	  var lastCharacter = bestamd.slice(-1);
+	  return lastCharacter === 'n' ? 'en' : 'ett';
+	};
+
+	var parseInflections = function parseInflections(current) {
+	  //Substantiv, Adjektiv
+	  if (!current || !current.paradigm || !current.paradigm.inflection) {
+	    return false;
+	  } else {
+	    if (Array.isArray(current.paradigm.inflection)) {
+	      return current.paradigm.inflection.map(function (inflection) {
+	        return inflection.value;
+	      });
+	    } else {
+	      return [current.paradigm.inflection.value];
+	    }
+	  }
+	};
+	var parseTranslation = function parseTranslation(trans) {
+	  if (Array.isArray(trans)) {
+	    return trans.map(function (tran) {
+	      return tran.value;
+	    });
+	  } else {
+	    return [trans.value];
+	  }
+	};
+	var parseExamples = function parseExamples(examples) {
+	  if (examples) {
+	    if (Array.isArray(examples)) {
+	      return examples.map(function (ex) {
+	        return {
+	          value: ex.value,
+	          translation: ex.translation ? decodeHtml(ex.translation.value) : ''
+	        };
+	      });
+	    } else {
+	      return [{
+	        value: examples.value,
+	        translation: examples.translation ? decodeHtml(examplestranslation.value) : ''
+	      }];
+	    }
+	  } else {
+
+	    return [];
+	  }
+	};
+	var parseLexikonEntry = function parseLexikonEntry(entry) {
+
+	  switch (entry.class) {
+	    case 'jj':
+	      return {
+	        category: 'adjektiv',
+	        translation: parseTranslation(entry.translation),
+	        inflections: parseInflections(entry),
+	        examples: parseExamples(entry.example)
+	      };
+
+	    case 'vb':
+	      return {
+	        category: 'verb',
+	        translation: parseTranslation(entry.translation),
+	        inflections: parseInflectionsVerb(entry),
+	        examples: parseExamples(entry.example)
+	      };
+
+	    case 'nn':
+	      return {
+	        category: 'substantiv',
+	        translation: parseTranslation(entry.translation),
+	        inflections: parseInflections(entry),
+	        etten: parseEttEn(parseInflections(entry)[0]),
+	        examples: parseExamples(entry.example)
+	      };
+
+	    case 'ab':
+	      return {
+	        category: 'adverb',
+	        translation: parseTranslation(entry.translation),
+	        inflections: [],
+	        examples: parseExamples(entry.example)
+	      };
+
+	    default:
+	      return {
+	        category: '(??)'
+	      };
+	  }
+	};
+	exports.default = parseLexikonEntry;
+
+/***/ },
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(222);
+	var content = __webpack_require__(223);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(214)(content, {});
@@ -26701,7 +26713,7 @@
 	}
 
 /***/ },
-/* 222 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(213)();
