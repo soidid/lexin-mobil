@@ -71,7 +71,7 @@ const parseExamples = (examples) => {
       }else{
         return [{
             value: examples.value,
-            translation: examples.translation ? decodeHtml(examplestranslation.value) : ''
+            translation: examples.translation ? decodeHtml(examples.translation.value) : ''
           }]
      } 
     }else{
