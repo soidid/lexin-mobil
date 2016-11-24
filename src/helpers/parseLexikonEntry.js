@@ -37,14 +37,16 @@ const parseInflectionsVerb = (current) => {
    
 }
 
-const parseEttEn = (bestamd) => {
+const parseEttEn = (bestamd) => {// Not every noun has this
+    if(!bestamd) return '';
+
     let lastCharacter = bestamd.slice(-1);
     return (lastCharacter === 'n') ? 'en' : 'ett'; 
 }
 
 const parseInflections = (current) => { //Substantiv, Adjektiv
     if( !current || !current.paradigm || !current.paradigm.inflection){
-        return false;
+        return [];
     }else{
         if(Array.isArray(current.paradigm.inflection)){
           return current.paradigm.inflection.map(inflection => inflection.value)
@@ -118,9 +120,36 @@ const parseLexikonEntry = (entry) => {
         examples: parseExamples(entry.example)
       }
 
+    case 'pp':
+      return {
+        category: 'preposition',
+        translation: parseTranslation(entry.translation),
+        inflections: [],
+        examples: parseExamples(entry.example)
+      }
+
+    case 'in':
+      return {
+        category: 'interjektion',
+        translation: parseTranslation(entry.translation),
+        inflections: [],
+        examples: parseExamples(entry.example)
+      }
+
+    case 'ab':
+      return {
+        category: 'abbrev',
+        translation: parseTranslation(entry.translation),
+        inflections: [],
+        examples: parseExamples(entry.example)
+      }
+  
     default:
       return {
-        category: '(??)'
+        category: entry.class,
+        translation: parseTranslation(entry.translation),
+        inflections: [],
+        examples: parseExamples(entry.example)
       }
   }
 

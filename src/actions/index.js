@@ -110,24 +110,23 @@ const parseAPIResult = (response) => {
 
 }
 
-const fetchLexinAPI= query => dispatch => {
+const fetchLexinAPI= index => dispatch => {
   console.log('fetchLexinAPI **')
-  dispatch(requestLexinAPI(query))
   
-  return request.get(`https://crossorigin.me/http://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_swe,${query}`, false)
-                .end((err,response) => {
-                    dispatch(receiveLexinAPI(query, parseAPIResult(response)))
-                })
+  index.map(query=>{
+      dispatch(requestLexinAPI(query))
+      return request.get(`https://crossorigin.me/http://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_swe,${query}`, false)
+                    .end((err,response) => {
+                        dispatch(receiveLexinAPI(query, parseAPIResult(response)))
+                    })
+    
+  })
+
+ 
 }
 
 const shouldFetchLexinAPI = (state, query) => {
-
-  console.log('shouldFetchLexinAPI')
-  console.log(state)
   const results = state.webLexikon[query]
-  console.log('shouldFetchLexinAPI - result:')
-  console.log(results)
-
   if (!results) {
     return true
   }
@@ -136,6 +135,7 @@ const shouldFetchLexinAPI = (state, query) => {
 }
 export const fetchLexinAPIIfNeeded = query => (dispatch, getState) => {
   if (shouldFetchLexinAPI(getState(), query)) {
-    return dispatch(fetchLexinAPI(query))
+    let index = getState().searchKey.indexList[query];
+    return dispatch(fetchLexinAPI(index))
   }
 }

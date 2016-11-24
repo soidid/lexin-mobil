@@ -42,11 +42,11 @@ const localLexikon = (state = {}, action) => {
   }
 }
 
-const searchKey = (state = {input:'', index:'', indexList: ''}, action) => {
+const searchKey = (state = {input:'', index:[], indexList: ''}, action) => {
   switch (action.type) {
     
     case INPUT_QUERY:
-      let index = '';
+      let index;
 
       if(state.indexList && state.indexList[action.query]){
         index = state.indexList[action.query]

@@ -40,7 +40,9 @@ class App extends Component {
     const lexikonContent = localLexikon.content || {}
     const { input, index } = searchKey
 
-    const audioData = webLexikon[input];
+    //index is an array, as there might be many matches
+
+    
    
     return (
       <div className={styles.app}>
@@ -54,7 +56,13 @@ class App extends Component {
               <div>{index === input ? "": (index ? "Key: "+index : "")}</div>
           </div>)
         }
-        <LocalLexikon index={index} lexikonEntries={lexikonContent[index]} audioData={audioData}/>
+        {
+          index.map((m,i)=>{
+            let audioData = webLexikon[m];
+            return <LocalLexikon index={m} lexikonEntries={lexikonContent[m]} audioData={audioData} key={`${m}+${i}`}/>
+        
+          })
+        }
         
       </div>
     )

@@ -24159,13 +24159,13 @@
 	};
 
 	var searchKey = function searchKey() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { input: '', index: '', indexList: '' };
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { input: '', index: [], indexList: '' };
 	  var action = arguments[1];
 
 	  switch (action.type) {
 
 	    case _actions.INPUT_QUERY:
-	      var index = '';
+	      var index = void 0;
 
 	      if (state.indexList && state.indexList[action.query]) {
 	        index = state.indexList[action.query];
@@ -24335,25 +24335,21 @@
 	  };
 	};
 
-	var fetchLexinAPI = function fetchLexinAPI(query) {
+	var fetchLexinAPI = function fetchLexinAPI(index) {
 	  return function (dispatch) {
 	    console.log('fetchLexinAPI **');
-	    dispatch(requestLexinAPI(query));
 
-	    return _superagent2.default.get('https://crossorigin.me/http://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_swe,' + query, false).end(function (err, response) {
-	      dispatch(receiveLexinAPI(query, parseAPIResult(response)));
+	    index.map(function (query) {
+	      dispatch(requestLexinAPI(query));
+	      return _superagent2.default.get('https://crossorigin.me/http://lexin.nada.kth.se/lexin/service?searchinfo=to,swe_swe,' + query, false).end(function (err, response) {
+	        dispatch(receiveLexinAPI(query, parseAPIResult(response)));
+	      });
 	    });
 	  };
 	};
 
 	var shouldFetchLexinAPI = function shouldFetchLexinAPI(state, query) {
-
-	  console.log('shouldFetchLexinAPI');
-	  console.log(state);
 	  var results = state.webLexikon[query];
-	  console.log('shouldFetchLexinAPI - result:');
-	  console.log(results);
-
 	  if (!results) {
 	    return true;
 	  }
@@ -24362,7 +24358,8 @@
 	var fetchLexinAPIIfNeeded = exports.fetchLexinAPIIfNeeded = function fetchLexinAPIIfNeeded(query) {
 	  return function (dispatch, getState) {
 	    if (shouldFetchLexinAPI(getState(), query)) {
-	      return dispatch(fetchLexinAPI(query));
+	      var index = getState().searchKey.indexList[query];
+	      return dispatch(fetchLexinAPI(index));
 	    }
 	  };
 	};
@@ -26048,8 +26045,7 @@
 	      var input = searchKey.input,
 	          index = searchKey.index;
 
-
-	      var audioData = webLexikon[input];
+	      //index is an array, as there might be many matches
 
 	      return _react2.default.createElement(
 	        'div',
@@ -26080,7 +26076,10 @@
 	            index === input ? "" : index ? "Key: " + index : ""
 	          )
 	        ),
-	        _react2.default.createElement(_LocalLexikon2.default, { index: index, lexikonEntries: lexikonContent[index], audioData: audioData })
+	        index.map(function (m, i) {
+	          var audioData = webLexikon[m];
+	          return _react2.default.createElement(_LocalLexikon2.default, { index: m, lexikonEntries: lexikonContent[m], audioData: audioData, key: m + '+' + i });
+	        })
 	      );
 	    }
 	  }]);
@@ -26796,6 +26795,9 @@
 	};
 
 	var parseEttEn = function parseEttEn(bestamd) {
+	  // Not every noun has this
+	  if (!bestamd) return '';
+
 	  var lastCharacter = bestamd.slice(-1);
 	  return lastCharacter === 'n' ? 'en' : 'ett';
 	};
@@ -26803,7 +26805,7 @@
 	var parseInflections = function parseInflections(current) {
 	  //Substantiv, Adjektiv
 	  if (!current || !current.paradigm || !current.paradigm.inflection) {
-	    return false;
+	    return [];
 	  } else {
 	    if (Array.isArray(current.paradigm.inflection)) {
 	      return current.paradigm.inflection.map(function (inflection) {
@@ -26879,9 +26881,48 @@
 	        examples: parseExamples(entry.example)
 	      };
 
+	    case 'pp':
+	      return {
+	        category: 'preposition',
+	        translation: parseTranslation(entry.translation),
+	        inflections: [],
+	        examples: parseExamples(entry.example)
+	      };
+
+	    case 'in':
+	      return {
+	        category: 'interjektion',
+	        translation: parseTranslation(entry.translation),
+	        inflections: [],
+	        examples: parseExamples(entry.example)
+	      };
+
+	    case 'ab':
+	      return {
+	        category: 'abbrev',
+	        translation: parseTranslation(entry.translation),
+	        inflections: [],
+	        examples: parseExamples(entry.example)
+	      };
+
+	    // "rg": "aderton",
+	    // "prefix": "aero-",
+	    // "kn": "allteftersom",
+	    // "undefined": "angav",
+	    // "ie": "att",
+	    // "article": "den",
+	    // "pm": "Försäkringskassan",
+	    // "suffix": "-procentig",
+	    // "hp": "vilket",
+	    // "ps": "någons",
+	    // "sn": "utifall"
+
 	    default:
 	      return {
-	        category: '(??)'
+	        category: entry.class,
+	        translation: parseTranslation(entry.translation),
+	        inflections: [],
+	        examples: parseExamples(entry.example)
 	      };
 	  }
 	};
