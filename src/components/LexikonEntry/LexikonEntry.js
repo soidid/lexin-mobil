@@ -12,7 +12,9 @@ const LexikonEntry = ({ entry }) => {
   console.log(word)
   return (
       <div>
-        ({word.category}) { word.translation.map((t,i)=>`${t}${i===word.translation.length-1 ? "":", "}`) }<br/>
+        { word.category ? `(${word.category}) ` :''}  
+        { word.translation.map((t,i)=>`${t}${i===word.translation.length-1 ? "":", "}`) }<br/>
+        
         <div>{word.inflections.map((t,i)=>`${t}${i===word.inflections.length-1 ? "":", "}`) }</div>
         <ul>
         {

@@ -26744,9 +26744,7 @@
 	  return _react2.default.createElement(
 	    'div',
 	    null,
-	    '(',
-	    word.category,
-	    ') ',
+	    word.category ? '(' + word.category + ') ' : '',
 	    word.translation.map(function (t, i) {
 	      return '' + t + (i === word.translation.length - 1 ? "" : ", ");
 	    }),
