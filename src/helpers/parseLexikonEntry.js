@@ -146,7 +146,7 @@ const parseLexikonEntry = (entry) => {
   
     default:
       return {
-        category: entry.class,
+        category: entry.class || "",
         translation: parseTranslation(entry.translation),
         inflections: [],
         examples: parseExamples(entry.example)

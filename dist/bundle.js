@@ -24344,6 +24344,12 @@
 
 	  var html = response.text;
 	  var matches = html.match(/<div>[\S\s]*?<\/div>/gi);
+	  if (!matches) {
+	    return {
+	      state: false
+	    };
+	  }
+
 	  var b = matches[0].match(/<b>[\S\s]*?<\/b>/gi);
 	  b = b[0].replace('<b>', '').replace('</b>', '');
 
@@ -24351,6 +24357,7 @@
 	  var a = matches[0].split('\"')[1];
 
 	  return {
+	    state: true,
 	    audioWord: b,
 	    audioUttal: u,
 	    audioLink: a
@@ -26583,7 +26590,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 
 	var _react = __webpack_require__(2);
@@ -26601,65 +26608,75 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var LocalLexikon = function LocalLexikon(_ref) {
-	  var index = _ref.index,
-	      lexikonEntries = _ref.lexikonEntries,
-	      audioData = _ref.audioData;
+	    var index = _ref.index,
+	        lexikonEntries = _ref.lexikonEntries,
+	        audioData = _ref.audioData;
 
 
-	  if (!lexikonEntries) {
-	    return _react2.default.createElement('div', null);
-	  }
-	  var audioContent = _react2.default.createElement(
-	    'div',
-	    { className: _LocalLexikon2.default.audioTitle },
-	    '(Loading audio files)'
-	  );
-	  if (audioData) {
-	    var audioWord = audioData.audioWord,
-	        audioUttal = audioData.audioUttal,
-	        audioLink = audioData.audioLink;
-
-	    audioContent = _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'div',
-	        { className: _LocalLexikon2.default.audioWord },
-	        audioWord,
-	        ' ',
-	        _react2.default.createElement(
-	          'span',
-	          { className: _LocalLexikon2.default.audioUttal },
-	          '[',
-	          audioUttal,
-	          ']'
-	        )
-	      ),
-	      _react2.default.createElement('audio', { src: audioLink, preload: 'auto', controls: true })
-	    );
-	  }
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(
-	      'h3',
-	      null,
-	      index
-	    ),
-	    _react2.default.createElement(
-	      'div',
-	      { className: _LocalLexikon2.default.audioPart },
-	      _react2.default.createElement(
+	    if (!lexikonEntries) {
+	        return _react2.default.createElement('div', null);
+	    }
+	    var audioContent = _react2.default.createElement(
 	        'div',
 	        { className: _LocalLexikon2.default.audioTitle },
-	        'LYSSNA'
-	      ),
-	      audioContent
-	    ),
-	    lexikonEntries.map(function (item, i) {
-	      return _react2.default.createElement(_LexikonEntry2.default, { entry: item, key: item + i });
-	    })
-	  );
+	        '(Loading audio files)'
+	    );
+	    if (audioData) {
+	        var state = audioData.state,
+	            audioWord = audioData.audioWord,
+	            audioUttal = audioData.audioUttal,
+	            audioLink = audioData.audioLink;
+
+
+	        if (state) {
+	            audioContent = _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: _LocalLexikon2.default.audioWord },
+	                    audioWord,
+	                    ' ',
+	                    _react2.default.createElement(
+	                        'span',
+	                        { className: _LocalLexikon2.default.audioUttal },
+	                        '[',
+	                        audioUttal,
+	                        ']'
+	                    )
+	                ),
+	                _react2.default.createElement('audio', { src: audioLink, preload: 'auto', controls: true })
+	            );
+	        } else {
+	            audioContent = _react2.default.createElement(
+	                'div',
+	                { className: _LocalLexikon2.default.audioTitle },
+	                'No data found.'
+	            );
+	        }
+	    }
+	    return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	            'h3',
+	            null,
+	            index
+	        ),
+	        _react2.default.createElement(
+	            'div',
+	            { className: _LocalLexikon2.default.audioPart },
+	            _react2.default.createElement(
+	                'div',
+	                { className: _LocalLexikon2.default.audioTitle },
+	                'LYSSNA'
+	            ),
+	            audioContent
+	        ),
+	        lexikonEntries.map(function (item, i) {
+	            return _react2.default.createElement(_LexikonEntry2.default, { entry: item, key: item + i });
+	        })
+	    );
 	};
 
 	exports.default = LocalLexikon;
@@ -26965,7 +26982,7 @@
 
 	    default:
 	      return {
-	        category: entry.class,
+	        category: entry.class || "",
 	        translation: parseTranslation(entry.translation),
 	        inflections: [],
 	        examples: parseExamples(entry.example)

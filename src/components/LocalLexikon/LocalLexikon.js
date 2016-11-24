@@ -9,14 +9,22 @@ const LocalLexikon = ({ index, lexikonEntries, audioData }) => {
   }
   let audioContent = <div className={styles.audioTitle}>(Loading audio files)</div>;
   if(audioData){
-     let { audioWord, audioUttal, audioLink } = audioData;
-     audioContent = (
-        <div>
-            <div className={styles.audioWord}>{audioWord} <span className={styles.audioUttal}>[{audioUttal}]</span></div>
-            <audio src={audioLink} preload="auto" controls></audio>
-        </div>
+     let { state, audioWord, audioUttal, audioLink } = audioData;
 
-     )
+     if(state){
+        audioContent = (
+            <div>
+                <div className={styles.audioWord}>{audioWord} <span className={styles.audioUttal}>[{audioUttal}]</span></div>
+                <audio src={audioLink} preload="auto" controls></audio>
+            </div>
+    
+        )
+     }else{
+        audioContent = (
+            <div className={styles.audioTitle}>No data found.</div>
+  
+        )
+     }
   }
   return (
       <div>
