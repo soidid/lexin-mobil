@@ -1,4 +1,5 @@
 export const INPUT_QUERY = 'INPUT_QUERY'
+export const RECEIVE_INDEX = 'RECEIVE_INDEX'
 
 export const REQUEST_LEXIN_API = 'REQUEST_LEXIN_API'
 export const RECEIVE_LEXIN_API = 'RECEIVE_LEXIN_API'
@@ -10,6 +11,7 @@ export const REQUEST_DICTIONARY_INDEX = 'REQUEST_DICTIONARY_INDEX'
 export const RECEIVE_DICTIONARY_INDEX = 'RECEIVE_DICTIONARY_INDEX'
 
 import request from 'superagent';
+import findPossibleVariations from '../helpers/findPossibleVariations.js'
 
 /* Fetch Dictionar Content */
 
@@ -74,10 +76,29 @@ export const fetchDictionaryIndexIfNeeded = () => (dispatch, getState) => {
   }
 }
 
-export const inputQuery = query => ({
-  type: INPUT_QUERY,
-  query
-})
+export const inputQuery = query => (dispatch, getState) => {
+  dispatch({
+    type: INPUT_QUERY,
+    query
+  })
+  const { indexList } = getState().searchKey;
+
+  if(indexList){
+      let index = indexList[query];
+  
+      if(!index){
+        index = findPossibleVariations(query, indexList);//stenhård, stenhårt, sten-
+      }
+      console.log(index)
+      dispatch({
+        type: RECEIVE_INDEX,
+        index
+      })
+
+  }
+  
+
+}
 
 
 
@@ -135,7 +156,12 @@ const shouldFetchLexinAPI = (state, query) => {
 }
 export const fetchLexinAPIIfNeeded = query => (dispatch, getState) => {
   if (shouldFetchLexinAPI(getState(), query)) {
-    let index = getState().searchKey.indexList[query];
-    return dispatch(fetchLexinAPI(index))
+    const { index } = getState().searchKey;
+    
+    if(index) 
+      return dispatch(fetchLexinAPI(index))
   }
 }
+
+
+

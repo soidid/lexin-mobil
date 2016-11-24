@@ -68,7 +68,7 @@
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _App = __webpack_require__(222);
+	var _App = __webpack_require__(223);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -24165,15 +24165,15 @@
 	  switch (action.type) {
 
 	    case _actions.INPUT_QUERY:
-	      var index = void 0;
-
-	      if (state.indexList && state.indexList[action.query]) {
-	        index = state.indexList[action.query];
-	      }
 
 	      return _extends({}, state, {
-	        input: action.query,
-	        index: index
+	        input: action.query
+	      });
+
+	    case _actions.RECEIVE_INDEX:
+
+	      return _extends({}, state, {
+	        index: action.index
 	      });
 
 	    case _actions.REQUEST_DICTIONARY_INDEX:
@@ -24204,15 +24204,20 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.fetchLexinAPIIfNeeded = exports.receiveLexinAPI = exports.requestLexinAPI = exports.inputQuery = exports.fetchDictionaryIndexIfNeeded = exports.receiveDictionaryIndex = exports.requestDictionaryIndex = exports.fetchDictionaryContentIfNeeded = exports.receiveDictionaryContent = exports.requestDictionaryContent = exports.RECEIVE_DICTIONARY_INDEX = exports.REQUEST_DICTIONARY_INDEX = exports.RECEIVE_DICTIONARY_CONTENT = exports.REQUEST_DICTIONARY_CONTENT = exports.RECEIVE_LEXIN_API = exports.REQUEST_LEXIN_API = exports.INPUT_QUERY = undefined;
+	exports.fetchLexinAPIIfNeeded = exports.receiveLexinAPI = exports.requestLexinAPI = exports.inputQuery = exports.fetchDictionaryIndexIfNeeded = exports.receiveDictionaryIndex = exports.requestDictionaryIndex = exports.fetchDictionaryContentIfNeeded = exports.receiveDictionaryContent = exports.requestDictionaryContent = exports.RECEIVE_DICTIONARY_INDEX = exports.REQUEST_DICTIONARY_INDEX = exports.RECEIVE_DICTIONARY_CONTENT = exports.REQUEST_DICTIONARY_CONTENT = exports.RECEIVE_LEXIN_API = exports.REQUEST_LEXIN_API = exports.RECEIVE_INDEX = exports.INPUT_QUERY = undefined;
 
 	var _superagent = __webpack_require__(217);
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
+	var _findPossibleVariations = __webpack_require__(222);
+
+	var _findPossibleVariations2 = _interopRequireDefault(_findPossibleVariations);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var INPUT_QUERY = exports.INPUT_QUERY = 'INPUT_QUERY';
+	var RECEIVE_INDEX = exports.RECEIVE_INDEX = 'RECEIVE_INDEX';
 
 	var REQUEST_LEXIN_API = exports.REQUEST_LEXIN_API = 'REQUEST_LEXIN_API';
 	var RECEIVE_LEXIN_API = exports.RECEIVE_LEXIN_API = 'RECEIVE_LEXIN_API';
@@ -24298,9 +24303,26 @@
 	};
 
 	var inputQuery = exports.inputQuery = function inputQuery(query) {
-	  return {
-	    type: INPUT_QUERY,
-	    query: query
+	  return function (dispatch, getState) {
+	    dispatch({
+	      type: INPUT_QUERY,
+	      query: query
+	    });
+	    var indexList = getState().searchKey.indexList;
+
+
+	    if (indexList) {
+	      var index = indexList[query];
+
+	      if (!index) {
+	        index = (0, _findPossibleVariations2.default)(query, indexList); //stenhård, stenhårt, sten-
+	      }
+	      console.log(index);
+	      dispatch({
+	        type: RECEIVE_INDEX,
+	        index: index
+	      });
+	    }
 	  };
 	};
 
@@ -24358,8 +24380,10 @@
 	var fetchLexinAPIIfNeeded = exports.fetchLexinAPIIfNeeded = function fetchLexinAPIIfNeeded(query) {
 	  return function (dispatch, getState) {
 	    if (shouldFetchLexinAPI(getState(), query)) {
-	      var index = getState().searchKey.indexList[query];
-	      return dispatch(fetchLexinAPI(index));
+	      var index = getState().searchKey.index;
+
+
+	      if (index) return dispatch(fetchLexinAPI(index));
 	    }
 	  };
 	};
@@ -25952,6 +25976,42 @@
 
 /***/ },
 /* 222 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	// stenhård, stenhårt
+	var findPossibleVariations = function findPossibleVariations(query, indexList) {
+		var results = [];
+		var last = query.length - 1;
+		if (query[last] === 't') {
+			var variation_1 = query.slice(0, last);
+			results = addIfExists(variation_1, indexList, results);
+
+			var variation_2 = query.slice(0, last) + 'd';
+			results = addIfExists(variation_2, indexList, results);
+
+			console.log("findPossibleVariations >>");
+			console.log(variation_1);
+			console.log(variation_2);
+		}
+		console.log(results);
+		return results;
+	};
+	var addIfExists = function addIfExists(value, list, results) {
+
+		if (list[value]) {
+			return Array.prototype.concat(results, list[value]);
+		}
+		return results;
+	};
+	exports.default = findPossibleVariations;
+
+/***/ },
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25970,15 +26030,15 @@
 
 	var _actions = __webpack_require__(216);
 
-	var _Search = __webpack_require__(223);
+	var _Search = __webpack_require__(224);
 
 	var _Search2 = _interopRequireDefault(_Search);
 
-	var _LocalLexikon = __webpack_require__(228);
+	var _LocalLexikon = __webpack_require__(229);
 
 	var _LocalLexikon2 = _interopRequireDefault(_LocalLexikon);
 
-	var _App = __webpack_require__(235);
+	var _App = __webpack_require__(236);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -26108,7 +26168,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(App);
 
 /***/ },
-/* 223 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26121,7 +26181,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Search = __webpack_require__(224);
+	var _Search = __webpack_require__(225);
 
 	var _Search2 = _interopRequireDefault(_Search);
 
@@ -26165,16 +26225,16 @@
 	exports.default = Search;
 
 /***/ },
-/* 224 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(225);
+	var content = __webpack_require__(226);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(227)(content, {});
+	var update = __webpack_require__(228)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -26191,10 +26251,10 @@
 	}
 
 /***/ },
-/* 225 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(226)();
+	exports = module.exports = __webpack_require__(227)();
 	// imports
 
 
@@ -26209,7 +26269,7 @@
 	};
 
 /***/ },
-/* 226 */
+/* 227 */
 /***/ function(module, exports) {
 
 	/*
@@ -26265,7 +26325,7 @@
 
 
 /***/ },
-/* 227 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -26517,7 +26577,7 @@
 
 
 /***/ },
-/* 228 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26530,11 +26590,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _LocalLexikon = __webpack_require__(229);
+	var _LocalLexikon = __webpack_require__(230);
 
 	var _LocalLexikon2 = _interopRequireDefault(_LocalLexikon);
 
-	var _LexikonEntry = __webpack_require__(231);
+	var _LexikonEntry = __webpack_require__(232);
 
 	var _LexikonEntry2 = _interopRequireDefault(_LexikonEntry);
 
@@ -26605,16 +26665,16 @@
 	exports.default = LocalLexikon;
 
 /***/ },
-/* 229 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(230);
+	var content = __webpack_require__(231);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(227)(content, {});
+	var update = __webpack_require__(228)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -26631,10 +26691,10 @@
 	}
 
 /***/ },
-/* 230 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(226)();
+	exports = module.exports = __webpack_require__(227)();
 	// imports
 
 
@@ -26650,7 +26710,7 @@
 	};
 
 /***/ },
-/* 231 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26663,11 +26723,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _LexikonEntry = __webpack_require__(232);
+	var _LexikonEntry = __webpack_require__(233);
 
 	var _LexikonEntry2 = _interopRequireDefault(_LexikonEntry);
 
-	var _parseLexikonEntry = __webpack_require__(234);
+	var _parseLexikonEntry = __webpack_require__(235);
 
 	var _parseLexikonEntry2 = _interopRequireDefault(_parseLexikonEntry);
 
@@ -26719,16 +26779,16 @@
 	exports.default = LexikonEntry;
 
 /***/ },
-/* 232 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(233);
+	var content = __webpack_require__(234);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(227)(content, {});
+	var update = __webpack_require__(228)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -26745,10 +26805,10 @@
 	}
 
 /***/ },
-/* 233 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(226)();
+	exports = module.exports = __webpack_require__(227)();
 	// imports
 
 
@@ -26761,7 +26821,7 @@
 	};
 
 /***/ },
-/* 234 */
+/* 235 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26905,18 +26965,6 @@
 	        examples: parseExamples(entry.example)
 	      };
 
-	    // "rg": "aderton",
-	    // "prefix": "aero-",
-	    // "kn": "allteftersom",
-	    // "undefined": "angav",
-	    // "ie": "att",
-	    // "article": "den",
-	    // "pm": "Försäkringskassan",
-	    // "suffix": "-procentig",
-	    // "hp": "vilket",
-	    // "ps": "någons",
-	    // "sn": "utifall"
-
 	    default:
 	      return {
 	        category: entry.class,
@@ -26929,16 +26977,16 @@
 	exports.default = parseLexikonEntry;
 
 /***/ },
-/* 235 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(236);
+	var content = __webpack_require__(237);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(227)(content, {});
+	var update = __webpack_require__(228)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -26955,10 +27003,10 @@
 	}
 
 /***/ },
-/* 236 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(226)();
+	exports = module.exports = __webpack_require__(227)();
 	// imports
 
 

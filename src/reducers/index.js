@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import {
 
   INPUT_QUERY,
+  RECEIVE_INDEX,
 
   REQUEST_LEXIN_API, 
   RECEIVE_LEXIN_API,
@@ -46,16 +47,17 @@ const searchKey = (state = {input:'', index:[], indexList: ''}, action) => {
   switch (action.type) {
     
     case INPUT_QUERY:
-      let index;
-
-      if(state.indexList && state.indexList[action.query]){
-        index = state.indexList[action.query]
-      }
       
       return {
         ...state,
-        input: action.query,
-        index: index
+        input: action.query
+      }
+
+    case RECEIVE_INDEX:
+      
+      return {
+        ...state,
+        index: action.index
       }
 
     case REQUEST_DICTIONARY_INDEX:
